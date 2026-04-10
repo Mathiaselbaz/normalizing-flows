@@ -48,7 +48,7 @@ class NormalizingFlow(nn.Module):
           Batch in the space of the target distribution,
           log determinant of the Jacobian
         """
-        log_det = torch.zeros(len(z), device=z.device)
+        log_det = torch.zeros(z.shape[0], device=z.device)
         for flow in self.flows:
             z, log_d = flow(z)
             log_det += log_d
@@ -78,7 +78,7 @@ class NormalizingFlow(nn.Module):
           Batch in the latent space, log determinant of the
           Jacobian
         """
-        log_det = torch.zeros(len(x), device=x.device)
+        log_det = torch.zeros(x.shape[0], device=x.device)
         for i in range(len(self.flows) - 1, -1, -1):
             x, log_d = self.flows[i].inverse(x)
             log_det += log_d
@@ -93,7 +93,7 @@ class NormalizingFlow(nn.Module):
         Returns:
           Estimate of forward KL divergence averaged over batch
         """
-        log_q = torch.zeros(len(x), device=x.device)
+        log_q = torch.zeros(x.shape[0], device=x.device)
         z = x
         for i in range(len(self.flows) - 1, -1, -1):
             z, log_det = self.flows[i].inverse(z)
@@ -188,7 +188,7 @@ class NormalizingFlow(nn.Module):
         Returns:
           log probability
         """
-        log_q = torch.zeros(len(x), dtype=x.dtype, device=x.device)
+        log_q = torch.zeros(x.shape[0], dtype=x.dtype, device=x.device)
         z = x
         for i in range(len(self.flows) - 1, -1, -1):
             z, log_det = self.flows[i].inverse(z)
@@ -245,7 +245,7 @@ class ConditionalNormalizingFlow(NormalizingFlow):
           Batch in the space of the target distribution,
           log determinant of the Jacobian
         """
-        log_det = torch.zeros(len(z), device=z.device)
+        log_det = torch.zeros(z.shape[0], device=z.device)
         for flow in self.flows:
             z, log_d = flow(z, context=context)
             log_det += log_d
@@ -277,7 +277,7 @@ class ConditionalNormalizingFlow(NormalizingFlow):
           Batch in the latent space, log determinant of the
           Jacobian
         """
-        log_det = torch.zeros(len(x), device=x.device)
+        log_det = torch.zeros(x.shape[0], device=x.device)
         for i in range(len(self.flows) - 1, -1, -1):
             x, log_d = self.flows[i].inverse(x, context=context)
             log_det += log_d
@@ -309,7 +309,7 @@ class ConditionalNormalizingFlow(NormalizingFlow):
         Returns:
           log probability
         """
-        log_q = torch.zeros(len(x), dtype=x.dtype, device=x.device)
+        log_q = torch.zeros(x.shape[0], dtype=x.dtype, device=x.device)
         z = x
         for i in range(len(self.flows) - 1, -1, -1):
             z, log_det = self.flows[i].inverse(z, context=context)
@@ -327,7 +327,7 @@ class ConditionalNormalizingFlow(NormalizingFlow):
         Returns:
           Estimate of forward KL divergence averaged over batch
         """
-        log_q = torch.zeros(len(x), device=x.device)
+        log_q = torch.zeros(x.shape[0], device=x.device)
         z = x
         for i in range(len(self.flows) - 1, -1, -1):
             z, log_det = self.flows[i].inverse(z, context=context)
@@ -393,7 +393,7 @@ class ClassCondFlow(nn.Module):
         Returns:
           Estimate of forward KL divergence averaged over batch
         """
-        log_q = torch.zeros(len(x), dtype=x.dtype, device=x.device)
+        log_q = torch.zeros(x.shape[0], dtype=x.dtype, device=x.device)
         z = x
         for i in range(len(self.flows) - 1, -1, -1):
             z, log_det = self.flows[i].inverse(z)
@@ -427,7 +427,7 @@ class ClassCondFlow(nn.Module):
         Returns:
           log probability
         """
-        log_q = torch.zeros(len(x), dtype=x.dtype, device=x.device)
+        log_q = torch.zeros(x.shape[0], dtype=x.dtype, device=x.device)
         z = x
         for i in range(len(self.flows) - 1, -1, -1):
             z, log_det = self.flows[i].inverse(z)
@@ -534,7 +534,7 @@ class MultiscaleFlow(nn.Module):
         Returns:
             List of latent variables z, log determinant of Jacobian
         """
-        log_det = torch.zeros(len(x), dtype=x.dtype, device=x.device)
+        log_det = torch.zeros(x.shape[0], dtype=x.dtype, device=x.device)
         if self.transform is not None:
             x, log_det_ = self.transform.inverse(x)
             log_det += log_det_
